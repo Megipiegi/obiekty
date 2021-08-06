@@ -2,6 +2,9 @@
 # GOTOWE Oba typy wizytówek, powinny oferować metodę contact(), która wyświetli na konsoli komunikat w postaci “Wybieram numer +48 123456789 i dzwonię do Jan Kowalski”. Wizytówka firmowa powinna wybierać służbowy numer telefonu, a wizytówka bazowa prywatny.
 # GOTOWE Oba typy wizytówek powinny mieć dynamiczny atrybut label_length, który zwraca długość imienia i nazwiska danej osoby.
 # MAM PROBLEM Stwórz funkcję create_contacts, która będzie potrafiła komponować losowe wizytówki. Niech ta funkcja przyjmuje dwa parametry: rodzaj wizytówki oraz ilość. Wykorzystaj bibliotekę faker do generowania danych.
+from faker import Faker
+
+
 class Basecontact:
     def __init__ (self, name, surname, telephone, email):
         self.name=name
@@ -12,6 +15,9 @@ class Basecontact:
 
     def __str__ (self):
         return f'{self.name} {self.surname} {self.telephone} {self.email}'
+
+    def __repr__(self):
+        return str(self)
 
     def contact (self):
         return f' Wybieram {self.telephone} i dzwonię do {self.name} {self.surname}'
@@ -37,7 +43,6 @@ class BusinessContact(Basecontact):
         self.company_name=company_name
         self.business_phone=business_phone
 
-
     def __str__ (self):
         return f'{self.name} {self.surname} {self.telephone} {self.email} {self.position} {self.company_name} {self.business_phone}'
 
@@ -57,4 +62,40 @@ business_contact_list = [business_contact_ola, business_contact_ala, business_co
 print('Businesscontacts:')
 for element in business_contact_list:
     print (element)
-    
+
+
+def create_contacts(contact_type, count):
+    if not issubclass(contact_type, Basecontact):
+        raise ValueError('Must inherit from Basecontact')
+
+    contacts = []
+    fake = Faker()
+
+    for c in range(count):
+        if contact_type is Basecontact:
+            contacts.append(Basecontact(
+                name=fake.first_name(),
+                surname=fake.last_name(),
+                telephone=fake.msisdn(),
+                email=fake.email()
+            ))
+        else:
+            contacts.append(BusinessContact(
+                name=fake.first_name(),
+                surname=fake.last_name(),
+                telephone=fake.msisdn(),
+                email=fake.email(),
+                position='Manager',
+                company_name='"Manageme"',
+                business_phone='+48792888886'
+            ))
+
+    return contacts
+
+
+print('BaseContact')
+print(create_contacts(Basecontact, 5))
+print()
+print('BusinessContact')
+print(create_contacts(BusinessContact, 5))
+print()
