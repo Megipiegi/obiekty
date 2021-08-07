@@ -18,13 +18,16 @@ class Basecontact:
     
     @property
     def label_length(self):
-      return len(self.name + self.surname)
-
+         return len(self.name + ' ' + self.surname)
 
 base_contact_ola = Basecontact (name='Ola', surname='Fasola', telephone='+48602222222', email='ola@ola.pl')
 base_contact_ala = Basecontact (name='Ala', surname='Makota', telephone='+48602222223', email='ala@ala.pl')
 base_contact_iza = Basecontact (name='Iza', surname='Unia', telephone='+48602222224', email='iza@iza.pl')
 base_contact_list=[base_contact_ola, base_contact_ala, base_contact_iza]
+
+print('Długość')
+print(base_contact_ola.label_length)
+print(base_contact_ola.contact())
 
 print('Basecontacts:')
 for element in base_contact_list:
@@ -57,4 +60,38 @@ business_contact_list = [business_contact_ola, business_contact_ala, business_co
 print('Businesscontacts:')
 for element in business_contact_list:
     print (element)
-    
+
+def create_contacts(contact_type, count):
+    if not issubclass(contact_type, Basecontact):
+        raise ValueError('Must inherit from Basecontact')
+
+    contacts = []
+    fake = Faker()
+
+    for c in range(count):
+        if contact_type is Basecontact:
+            contacts.append(Basecontact(
+                name=fake.first_name(),
+                surname=fake.last_name(),
+                telephone=fake.msisdn(),
+                email=fake.email()
+            ))
+        else:
+            contacts.append(BusinessContact(
+                name=fake.first_name(),
+                surname=fake.last_name(),
+                telephone=fake.msisdn(),
+                email=fake.email(),
+                position='Manager',
+                company_name='"Manageme"',
+                business_phone='+48792888886'
+            ))
+
+    return contacts
+
+print('BaseContact')
+print(create_contacts(Basecontact, 5))
+print()
+print('BusinessContact')
+print(create_contacts(BusinessContact, 5))
+print()
