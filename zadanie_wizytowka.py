@@ -49,7 +49,7 @@ class BusinessContact(Basecontact):
 
     @property
     def label_length(self):
-        return len(self.name + self.surname)
+        return len(self.name + ' ' + self.surname)
 
 
 business_contact_ola = BusinessContact (name='Ola', surname='Fasola', telephone='+48602222222', email='ola@ola.pl', position = 'Manager', company_name = '"Manageme"', business_phone ='+48792888886' )
